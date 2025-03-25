@@ -75,20 +75,22 @@ class Query:
         # import pudb; pu.db
 
         if debug is None:
-            debug = self.config.get("debug", False)
+            debug = False
+        debug = debug or self.context.get("debug", False)
 
         q = self._prefixes_ + "\n\n" + self.query
         if debug:
-            print(q)
-            print("Params are:", self.graphIRI, self.args)
+            # print(q)
+            print("Params are:", self.graphIRI)
         context = {}
         context.update(self.context)
         context["graph"]=self.graphIRI
-        pprint(context)
-        q = chevron.render(q, context)
-        pprint(q)
         if debug:
-            print(q)
+            print("Context:\n")
+            pprint(context)
+        q = chevron.render(q, context)
+        if debug:
+            print("SPARQL:\n",q)
         sparql = SPARQLWrapper(self.endpoint)
         sparql.setQuery(q)
         sparql.setMethod(POST)

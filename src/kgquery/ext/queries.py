@@ -15,7 +15,11 @@ query_sample_data = """
            ?long, ?lat,
            {{/location}}
 
-           ?element, ?value, ?unitid, ?unit
+           {{#element}}
+           mt:{{element}} as
+           {{/element}}
+           ?element,
+           ?value, ?unitid, ?unit
 
     FROM <{{& graph}}>
 
@@ -23,7 +27,9 @@ query_sample_data = """
        ?main_site rdfs:label ?m_site_name .
        ?main_site a pt:Site  .
 
+       {{#site}}
        FILTER (?m_site_name = "{{site}}"@ru)
+       {{/site}}
 
        ?main_site ^pt:location* ?site .
        ?site rdfs:label ?site_name .
@@ -41,11 +47,12 @@ query_sample_data = """
 
        ?uri pt:measurement ?m .
        {{#element}}
-       ?m mt:element <{{& element}}> .
+       ?m mt:element mt:{{element}} .
+       ### BIND(mt:{{element}} as ?element)
        {{/element}}
-       {{^element2}}
+       {{^element}}
        ?m mt:element ?element .
-       {{/element2}}
+       {{/element}}
        ?m pt:value ?value .
        ?m pt:unit ?unitid .
        OPTIONAL {
@@ -76,7 +83,7 @@ query_sample_data_with_coords = """
 
 
 def pollution_data(query, context):
-    context["debug"]=True
+    context["debug"] = True
     qs = NTQuery(query, SAMPLEGRAPH, context=context)
     # qs.print()
     return qs.results()
@@ -98,44 +105,102 @@ def pollution_data(query, context):
 #          element = MT.Ga.n3(), debug=True)
 
 
-def samples(site, context=None):
+def adjustcontext(site, context):
     if context is None:
-        context = {"site":site}
+        if site is None:
+            raise ValueError("both site and context are None")
+        context = {"site": site}
+
+    if "site" not in context:
+        raise ValueError("site(s) must be supplied")
+
+    site = context["site"]
+    if not isinstance(site, (list, tuple)):
+        sites = [site]
+    context["sites"] = sites
+
+
+def u(s):
+    if s.startswith("http"):
+        return URIRef(s)
+    return s
+
+
+def g(headers, row, default=0.0):
+    for h in headers:
+        if h in row:
+            yield row[h]
+        else:
+            yield default
+
+
+def fr(row):
+    for e in row:
+        # print(e, type(e))
+        if isinstance(e, URIRef):
+            yield e.fragment
+        else:
+            yield e
+
+def simplify(val):
+    if isinstance(val, URIRef):
+        fragment = val.fragment
+        if fragment:
+            return simplify(fragment)
+        _split = val.rsplit("/", 1)
+        _ns, fragment = _split
+        return simplify(fragment)
+    if val.startswith("http"):
+        return simplify(URIRef(val))
+    try:
+        return int(val)
+    except ValueError:
+        pass
+    try:
+        return float(val)
+    except ValueError:
+        pass
+    return val
+
+def simple(context):
+    adjustcontext(None, context)
+    sim = context.get("simplify", False)
+    fields = None
+    _id=0
+    for row in pollution_data(query_sample_data, context):
+        if fields is None:
+            fields = row._fields
+        if sim:
+            row=[simplify(v) for v in row]
+        row = {fields[i]:row[i] for i in range(len(fields))}
+        row["id"]=_id
+        _id+=1
+        yield row
+
+def samples(site=None, context=None):
+    adjustcontext(site, context)
     tbl = {}
     headers = set(['sample', 'site'])
 
-    def u(s):
-        if s.startswith("http"):
-            return URIRef(s)
-        return s
-#    for row in pollution_data(query_sample_data,
-#                              "Бураевская площадь", None):
+    #    for row in pollution_data(query_sample_data,
+    #                              "Бураевская площадь", None):
+
     for row in pollution_data(query_sample_data, context):
         sample = u(row.uri)
         element = u(row.element)
         headers.add(element)
-        s = tbl.setdefault(sample, {"sample":row.sample_name, "site":row.site_name})
+        s = tbl.setdefault(sample, {
+            "sample": row.sample_name,
+            "site": row.site_name
+        })
         try:
             s[element] = float(row.value)
         except ValueError:
             s[element] = 0.0
         # Row(uri='http://crust.irk.ru/ontology/pollution/1.0/2464-1', site_name='Ивановский', sample_name='2464-1', element='http://www.daml.org/2003/01/periodictable/PeriodicTable#V', value='4.2999999999999998224', unitid='http://crust.irk.ru/ontology/pollution/terms/1.0/PPM', unit='мг/кг')
-    def g(headers, row):
-        for h in headers:
-            if h in row:
-                yield row[h]
-            else:
-                yield 0.0
 
-    def fr(row):
-        for e in row:
-            # print(e, type(e))
-            if isinstance(e, URIRef):
-                yield e.fragment
-            else:
-                yield e
     h = fr(headers)
-        # wr.writerow(headers)
+    # wr.writerow(headers)
     yield h
     for sample, row in tbl.items():
         yield g(headers, row)
@@ -144,6 +209,6 @@ def samples(site, context=None):
 if __name__ == "__main__":
     gen = samples(sys.argv[1])
     with open(sys.argv[2], "w") as o:
-        wr = csv.writer(o, quotechar='"',quoting=csv.QUOTE_STRINGS)
+        wr = csv.writer(o, quotechar='"', quoting=csv.QUOTE_STRINGS)
         for row in gen:
             wr.writerow(row)
