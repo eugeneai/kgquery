@@ -1,4 +1,4 @@
-#!/bin/env python 
+#!/bin/env python
 from .common import NTQuery, SAMPLEGRAPH, quicktest
 from rdflib import URIRef
 from .namespace import PT, P, MT
@@ -36,6 +36,26 @@ query_sample_data = """
        }}
     }}
     """
+
+query_sample_data_with_coords = """
+    select ?slab ?el ?val ?unit ?lat ?long
+    FROM <{graph}>
+    where {
+      ?s a pt:Sample .
+      { ?s pt:location pi:Харанцы . } union { ?s pt:location pi:Хужир . }
+      ?s wgs:location ?loc .
+      ?s rdfs:label ?slab .
+      ?loc  a wgs:Point .
+      ?loc wgs:lat ?lat .
+      ?loc wgs:long ?long .
+      ?s pt:measurement ?m .
+      ?m a pt:Measurement .
+      ?m pt:unit ?unit .
+      # ?unit rdfs:label ?unitlab .
+      ?m pt:value ?val .
+      ?m mt:element ?el .
+    }
+"""
 
 
 def pollution_data(query, site, element = None):
@@ -92,7 +112,7 @@ def samples(site):
                 yield row[h]
             else:
                 yield 0.0
-                
+
     def fr(row):
         for e in row:
             # print(e, type(e))
@@ -105,8 +125,8 @@ def samples(site):
     yield h
     for sample, row in tbl.items():
         yield g(headers, row)
-    
-        
+
+
 if __name__ == "__main__":
     gen = samples(sys.argv[1])
     with open(sys.argv[2], "w") as o:

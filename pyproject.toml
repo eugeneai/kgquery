@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kgquery"
-version = "0.1.0"
+version = "0.2.0"
 description = "Knowledge Graph Query Set"
 readme = "README.rst"
 authors = [
@@ -18,7 +18,7 @@ classifiers = [
 ]
 license = {text = "GNU General Public License v3"}
 dependencies = [
-  
+
 ]
 
 [project.optional-dependencies]
@@ -60,4 +60,3 @@ warn_no_return = true
 module = "tests.*"
 allow_untyped_defs = true
 disable_error_code = "attr-defined"
-
