@@ -19,7 +19,7 @@ query_sample_data = """
            mt:{{element}} as
            {{/element}}
            ?element,
-           ?value, ?unitid, ?unit
+           ?value, ?unitid, ?unit, ?detlim
 
     FROM <{{& graph}}>
 
@@ -46,15 +46,23 @@ query_sample_data = """
        {{/location}}
 
        ?uri pt:measurement ?m .
+       ?m a pt:Measurement .
        {{#element}}
        ?m mt:element mt:{{element}} .
-       ### BIND(mt:{{element}} as ?element)
        {{/element}}
        {{^element}}
        ?m mt:element ?element .
        {{/element}}
-       ?m pt:value ?value .
-       ?m pt:unit ?unitid .
+       { ?m pt:value ?value .
+         ?m pt:unit ?unitid .
+         BIND(0 AS ?detlim) .
+       } UNION {
+         ?m pt:value ?dl .
+         ?dl a pt:DetectionLimit .
+         ?dl pt:unit ?unitid .
+         ?dl pt:value ?value .
+         BIND(1 AS ?detlim) .
+       } .
        OPTIONAL {
           ?unitid rdfs:label ?unit .
        }
@@ -118,7 +126,7 @@ def adjustcontext(site, context):
     if not isinstance(site, (list, tuple)):
         sites = [site]
     context["sites"] = sites
-
+    return context
 
 def u(s):
     if s.startswith("http"):
@@ -163,7 +171,7 @@ def simplify(val):
     return val
 
 def simple(context):
-    adjustcontext(None, context)
+    context = adjustcontext(None, context)
     sim = context.get("simplify", False)
     fields = None
     _id=0
@@ -178,7 +186,7 @@ def simple(context):
         yield row
 
 def samples(site=None, context=None):
-    adjustcontext(site, context)
+    context = adjustcontext(site, context)
     tbl = {}
     headers = set(['sample', 'site'])
 
