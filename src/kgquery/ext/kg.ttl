@@ -8,7 +8,7 @@
 
 pi:Данные_Харанцы_Ольхон_xls_Лист1 a pt:Site ;
     rdfs:label "Данные Харанцы Ольхон, Лист1" ;
-    pt:sample pi:AGS-0084,
+    pt:sample
         pi:AGS-0085,
         pi:AGS-0086,
         pi:AGS-0087,
@@ -87,8 +87,8 @@ pi:Данные_Хужир_Ольхон_xls_Лист1 a pt:Site ;
         pi:UGS-0267,
         pi:UGS-0268,
         pi:UGS-0269,
-        pi:UGS-0270,
-        pi:UGW-0264 .
+        pi:UGS-0270
+        .
 
 pi:Данные_бар_Ярки_Сев_Байкал_xls_Лист1 a pt:Site ;
     rdfs:label "Данные бар Ярки Сев Байкал, Лист1" ;
@@ -13953,153 +13953,6 @@ pi:2464-1 a pt:Sample ;
             mt:element mt:S ] ;
     schema:sku "P61" .
 
-pi:AGS-0084 a pt:Sample ;
-    rdfs:label "AGS-0084" ;
-    pt:location pi:Харанцы ;
-    pt:measurement [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.29e+01 ;
-            mt:element mt:Pb ],
-        [ a pt:Measurement ;
-            pt:unit pt:Percent ;
-            pt:value 1.1406e+01 ;
-            mt:element mt:Al ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.356e+02 ;
-            mt:element mt:V ],
-        [ a pt:Measurement ;
-            pt:unit pt:Percent ;
-            pt:value 1.67e-01 ;
-            mt:element mt:Mn ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 10 ;
-            mt:element mt:Ga ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.42e+01 ;
-            mt:element mt:Nb ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 8.04e+01 ;
-            mt:element mt:Cr ],
-        [ a pt:Measurement ;
-            pt:unit pt:Percent ;
-            pt:value 9.64e-01 ;
-            mt:element mt:Na ],
-        [ a pt:Measurement ;
-            pt:unit pt:Percent ;
-            pt:value 9.28e-01 ;
-            mt:element mt:Ti ],
-        [ a pt:Measurement ;
-            pt:unit pt:Percent ;
-            pt:value 6.24e+01 ;
-            mt:element mt:Si ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 3.08e+01 ;
-            mt:element mt:La ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.48e+01 ;
-            mt:element mt:Co ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 4.11e+01 ;
-            mt:element mt:Ni ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.98e+01 ;
-            mt:element mt:Nd ],
-        [ a pt:Measurement ;
-            pt:unit pt:Percent ;
-            pt:value 2.36e+00 ;
-            mt:element mt:Ca ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 2.997e+02 ;
-            mt:element mt:S ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.84e+01 ;
-            mt:element mt:Y ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 7.73e+01 ;
-            mt:element mt:Cl ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.9e+00 ;
-            mt:element mt:Mo ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 2.65e+01 ;
-            mt:element mt:Cu ],
-        [ a pt:Measurement ;
-            pt:unit pt:Percent ;
-            pt:value 1.603e+00 ;
-            mt:element mt:K ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.66e+01 ;
-            mt:element mt:Sc ],
-        [ a pt:Measurement ;
-            pt:unit pt:Percent ;
-            pt:value 4.794e+00 ;
-            mt:element mt:Fe ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 3.36e+01 ;
-            mt:element mt:Ce ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 3.57e+01 ;
-            mt:element mt:Rb ],
-        [ a pt:Measurement ;
-            pt:unit pt:Percent ;
-            pt:value 1.255e+00 ;
-            mt:element mt:Mg ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 4 ;
-            mt:element mt:U ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 6.8e+00 ;
-            mt:element mt:Th ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.943466e+03 ;
-            mt:element mt:P ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 7.004e+02 ;
-            mt:element mt:Ba ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 3.059e+02 ;
-            mt:element mt:Sr ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 2.021e+02 ;
-            mt:element mt:Zr ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.3e+00 ;
-            mt:element mt:As ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 0 ;
-            mt:element mt:F ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 1.046e+02 ;
-            mt:element mt:Zn ] ;
-    wgs:location [ a wgs:Point ;
-            pt:georeferencing pt:GPS ;
-            wgs:lat 5.321207e+01 ;
-            wgs:long 1.074254e+02 ] .
 
 pi:AGS-0085 a pt:Sample ;
     rdfs:label "AGS-0085" ;
@@ -15426,8 +15279,8 @@ pi:AGS-0093 a pt:Sample ;
             mt:element mt:V ] ;
     wgs:location [ a wgs:Point ;
             pt:georeferencing pt:GPS ;
-            wgs:lat 5.317988e+01 ;
-            wgs:long 1.07461e+02 ] .
+        wgs:lat 53.17524 ;
+        wgs:long 107.46819 ] .
 
 pi:AGS-0094 a pt:Sample ;
     rdfs:label "AGS-0094" ;
@@ -26139,149 +25992,6 @@ pi:UGS-0270 a pt:Sample ;
             pt:georeferencing pt:GPS ;
             wgs:lat 5.316868e+01 ;
             wgs:long 1.073482e+02 ] .
-
-pi:UGW-0264 a pt:Sample ;
-    rdfs:label "UGW-0264" ;
-    pt:location pi:Хужир ;
-    pt:measurement [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 26 ;
-            mt:element mt:La ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 17 ;
-            mt:element mt:Cu ],
-        [ a pt:Measurement ;
-            pt:compound pt:compound-TiO2 ;
-            pt:unit pt:Percent ;
-            pt:value 4.63e-01 ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 326 ;
-            mt:element mt:F ],
-        [ a pt:Measurement ;
-            pt:compound pt:compound-CaO ;
-            pt:unit pt:Percent ;
-            pt:value 1.93e+00 ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 66 ;
-            mt:element mt:Zn ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 6.4e+00 ;
-            mt:element mt:Th ],
-        [ a pt:Measurement ;
-            pt:compound pt:compound-P2O5 ;
-            pt:unit pt:Percent ;
-            pt:value 1.38e-01 ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 18 ;
-            mt:element mt:Nd ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 18 ;
-            mt:element mt:Y ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 9 ;
-            mt:element mt:Co ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 26 ;
-            mt:element mt:Pb ],
-        [ a pt:Measurement ;
-            pt:compound pt:compound-K2O ;
-            pt:unit pt:Percent ;
-            pt:value 2.703e+00 ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 798 ;
-            mt:element mt:Ba ],
-        [ a pt:Measurement ;
-            pt:compound pt:compound-Na2O ;
-            pt:unit pt:Percent ;
-            pt:value 1.154e+00 ],
-        [ a pt:Measurement ;
-            pt:value _:n74c7501c6bbf4fa39a065dd3828254c7b5 ;
-            mt:element mt:W ],
-        [ a pt:Measurement ;
-            pt:total true ;
-            pt:unit pt:PPM ;
-            pt:value 207 ;
-            mt:element mt:S ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 223 ;
-            mt:element mt:Sr ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 24 ;
-            mt:element mt:Ni ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 40 ;
-            mt:element mt:Ce ],
-        [ a pt:Measurement ;
-            pt:value _:n74c7501c6bbf4fa39a065dd3828254c7b3 ;
-            mt:element mt:Sn ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 52 ;
-            mt:element mt:Cr ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 7.3e+00 ;
-            mt:element mt:Nb ],
-        [ a pt:Measurement ;
-            pt:compound pt:compound-SiO2 ;
-            pt:unit pt:Percent ;
-            pt:value 6.713e+01 ],
-        [ a pt:Measurement ;
-            pt:compound pt:compound-MgO ;
-            pt:unit pt:Percent ;
-            pt:value 9.5e-01 ],
-        [ a pt:Measurement ;
-            pt:compound pt:compound-MnO ;
-            pt:unit pt:Percent ;
-            pt:value 2.62e-01 ],
-        [ a pt:Measurement ;
-            pt:compound pt:compound-Fe2O3 ;
-            pt:total true ;
-            pt:unit pt:Percent ;
-            pt:value 2.042e+00 ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 59 ;
-            mt:element mt:V ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 142 ;
-            mt:element mt:Zr ],
-        [ a pt:Measurement ;
-            pt:compound pt:compound-Al2O3 ;
-            pt:unit pt:Percent ;
-            pt:value 1.103e+01 ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 97 ;
-            mt:element mt:Rb ],
-        [ a pt:Measurement ;
-            pt:value _:n74c7501c6bbf4fa39a065dd3828254c7b2 ;
-            mt:element mt:U ],
-        [ a pt:Measurement ;
-            pt:value _:n74c7501c6bbf4fa39a065dd3828254c7b4 ;
-            mt:element mt:As ],
-        [ a pt:Measurement ;
-            pt:unit pt:PPM ;
-            pt:value 10 ;
-            mt:element mt:Ga ] ;
-    pt:Сорг 9.6e+00 ;
-    wgs:location [ a wgs:Point ;
-            pt:georeferencing pt:GPS ;
-            wgs:lat 5.315506e+01 ;
-            wgs:long 1.073549e+02 ] .
 
 pi:Северный_Байкал a pt:Site ;
     rdfs:label "Северный Байкал"@ru .

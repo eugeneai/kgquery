@@ -109,10 +109,8 @@ class Query:
                 G = src
                 # pudb
             rc = G.query(q)
-            print("+++++")
-            for r in rc:
-                print(":", r)
-            quit()
+            # print("+++++")
+            raise RuntimeError("This variant is not working, use fuseki")
             return rc
             return convrows(rc)
         else:
@@ -133,7 +131,7 @@ class NTQuery(Query):
     def results(self, debug=False):
         gen = super().results(debug=debug)
         np = namedtuple('Row', self.header)
-        print([g for g in gen])
+        # print([g for g in gen])
         for a in gen:
             yield np(**a)
 
