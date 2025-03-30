@@ -1,5 +1,5 @@
 #!/bin/env python
-from .common import NTQuery, SAMPLEGRAPH, quicktest
+from .common import NTQuery, SAMPLEGRAPH, ENDPOINT, quicktest
 from rdflib import URIRef
 from ..namespace import PT, P, MT
 from collections import namedtuple
@@ -8,20 +8,23 @@ import csv
 import sys
 
 query_sample_data = """
-    # SELECT *
-    SELECT ?uri, ?site_name, ?sample_name,
+    SELECT ?uri ?site_name ?sample_name
 
            {{#location}}
-           ?long, ?lat,
+           ?long ?lat
            {{/location}}
 
            {{#element}}
-           mt:{{element}} as
+           (mt:{{element}} as ?element)
            {{/element}}
-           ?element,
-           ?value, ?unitid, ?unit, ?detlim
+           {{^element}}
+           ?element
+           {{/element}}
+           ?value ?unitid ?unit ?detlim
 
+    {{#graph}}
     FROM <{{& graph}}>
+    {{/graph}}
 
     WHERE {
        ?main_site rdfs:label ?m_site_name .
@@ -32,6 +35,7 @@ query_sample_data = """
        {{/site}}
 
        ?main_site ^pt:location* ?site .
+       # ?main_site pt:location ?site .
        ?site rdfs:label ?site_name .
        ?site a pt:Site  .
        ?uri pt:location ?site .
@@ -69,31 +73,11 @@ query_sample_data = """
     }
     """
 
-query_sample_data_with_coords = """
-    select ?slab ?el ?val ?unit ?lat ?long
-    FROM <{graph}>
-    where {
-      ?s a pt:Sample .
-      { ?s pt:location pi:Харанцы . } union { ?s pt:location pi:Хужир . }
-      ?s wgs:location ?loc .
-      ?s rdfs:label ?slab .
-      ?loc  a wgs:Point .
-      ?loc wgs:lat ?lat .
-      ?loc wgs:long ?long .
-      ?s pt:measurement ?m .
-      ?m a pt:Measurement .
-      ?m pt:unit ?unit .
-      # ?unit rdfs:label ?unitlab .
-      ?m pt:value ?val .
-      ?m mt:element ?el .
-    }
-"""
-
 
 def pollution_data(query, context):
-    context["debug"] = True
-    qs = NTQuery(query, SAMPLEGRAPH, context=context)
-    # qs.print()
+    # graph = context.get('graph', SAMPLEGRAPH)
+    graph = context.get('graph', None)
+    qs = NTQuery(query, graph, context=context)
     return qs.results()
 
 
@@ -215,8 +199,50 @@ def samples(site=None, context=None):
 
 
 if __name__ == "__main__":
-    gen = samples(sys.argv[1])
-    with open(sys.argv[2], "w") as o:
-        wr = csv.writer(o, quotechar='"', quoting=csv.QUOTE_STRINGS)
-        for row in gen:
-            wr.writerow(row)
+
+    test_query = """
+    # ENDPOINT {{endpoint}}
+    SELECT ?s ?p ?o
+    {{#graph}}
+    # FROM <{{graph}}>
+    {{/graph}}
+    {{^graph}}
+    # No GRAPH supplied
+    {{/graph}}
+    WHERE {
+      ?s ?p ?o .
+    }
+    LIMIT 10
+    """
+
+    #gen = samples(sys.argv[1])
+    # with open(sys.argv[2], "w") as o:
+    #     wr = csv.writer(o, quotechar='"', quoting=csv.QUOTE_STRINGS)
+    #     for row in gen:
+    #         wr.writerow(row)
+    local_test = True
+    quick_test = False
+    src = "./kg.ttl"
+    # fuseki-server --port 4040 --file kg.ttl /samples
+    if local_test:
+        graph = "http://localhost:4040/samples"
+        endpoint = graph+"/sparql"
+    else:
+        graph = SAMPLEGRAPH
+        endpoint = ENDPOINT
+    site = 'Харанцы'
+    context = {'debug': True,
+               'endpoint': endpoint,
+               # 'graph': graph,
+               # 'src': src,
+               'site': site,
+               'element' : 'Pb',
+               'simplify' : True,
+               'location' : True,
+               'sites': site}
+    if quick_test:
+        quicktest(query_sample_data, context)
+        # quicktest(test_query, context)
+    else:
+        for a in simple(context):
+            print(a)

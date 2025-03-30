@@ -4,6 +4,7 @@ import os
 from pprint import pprint
 from collections import namedtuple
 import chevron
+from rdflib import Graph
 
 try:
     del os.environ["HTTP_PROXY"]
@@ -25,7 +26,12 @@ PREFIXES = """
     PREFIX mt: <http://www.daml.org/2003/01/periodictable/PeriodicTable#>
     PREFIX wgs: <https://www.w3.org/2003/01/geo/wgs84_pos#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    {{#graph}}
     PREFIX g: <{{graph}}>
+    {{/graph}}
+    {{^graph}}
+    PREFIX g: <{{src}}>
+    {{/graph}}
 
 """
 
@@ -38,44 +44,41 @@ QUERY = (
     """
 )
 
-sparql = SPARQLWrapper(ENDPOINT)
-# sparql.setCredentials("some-login", "some-password") # if required
-sparql.setMethod(POST)  # this is the crucial option
-sparql.setReturnFormat(JSON)
-# sparql.setReturnFormat(XML)
-
-# sparql.setQuery(QUERY)
-
-# results = sparql.query()
-# print(results.response.read().decode('utf-8'))
-# results.print_results()
-
-
 def conv(results):
     binds = results["results"]["bindings"]
     for e in binds:
         yield {k: v["value"] for k, v in e.items()}
 
+def convrows(rows):
+    for row in rows:
+        print(row)
+        yield row
+
+def lineprint(s):
+    import io
+    with io.StringIO(s) as i:
+        n = 1
+        for l in i:
+            print("{:3}: {}".format(n,l), end="")
+            n += 1
 
 class Query:
 
     _prefixes_ = PREFIXES
     _endpoint_ = ENDPOINT
 
-    def __init__(self, query, graphIRI, context, endpoint=None):
+    def __init__(self, query, graphIRI, context):
         self.query = query
         self.graphIRI = graphIRI
         self.context = context
-        if endpoint is None:
-            endpoint = self._endpoint_
-        self.endpoint = endpoint
+        if "endpoint" not in context:
+            context["endpoint"] = self._endpoint_
+        self.endpoint = context["endpoint"]
         self.header = []
 
-    def results(self, debug=None):
-        # import pudb; pu.db
+    def results(self, debug=False):
+        # import pudb
 
-        if debug is None:
-            debug = False
         debug = debug or self.context.get("debug", False)
 
         q = self._prefixes_ + "\n\n" + self.query
@@ -84,19 +87,41 @@ class Query:
             print("Params are:", self.graphIRI)
         context = {}
         context.update(self.context)
-        context["graph"]=self.graphIRI
+        src = context.get("src", None)
+        if not src:
+            context["graph"]=self.graphIRI
         if debug:
             print("Context:\n")
             pprint(context)
+        if isinstance(src, Graph):
+            context["~~graph"] = src
+            context["src"] = "local-file"
         q = chevron.render(q, context)
         if debug:
-            print("SPARQL:\n",q)
-        sparql = SPARQLWrapper(self.endpoint)
-        sparql.setQuery(q)
-        sparql.setMethod(POST)
-        sparql.setReturnFormat(JSON)
-        results = sparql.query()
-        rc = results.convert()
+            print("SPARQL:")
+            lineprint(q)
+            print()
+        if src:
+            if isinstance(src, str):
+                G=Graph()
+                G.parse(src)
+            else:
+                G = src
+                # pudb
+            rc = G.query(q)
+            print("+++++")
+            for r in rc:
+                print(":", r)
+            quit()
+            return rc
+            return convrows(rc)
+        else:
+            sparql = SPARQLWrapper(self.endpoint)
+            sparql.setQuery(q)
+            sparql.setMethod(POST)
+            sparql.setReturnFormat(JSON)
+            results = sparql.query()
+            rc = results.convert()
         self.header = rc["head"]["vars"]
         return conv(rc)
 
@@ -108,10 +133,12 @@ class NTQuery(Query):
     def results(self, debug=False):
         gen = super().results(debug=debug)
         np = namedtuple('Row', self.header)
+        print([g for g in gen])
         for a in gen:
             yield np(**a)
 
 
-def quicktest(query, graph, **args):
-    q = Query(query, graph, **args)
+def quicktest(query, context):
+    graph = context.get("graph", None)
+    q = Query(query, graph, context)
     q.print()
